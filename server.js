@@ -1,9 +1,7 @@
 const express = require("express");
-const {
-  OAuthClient,
-  GoogleProvider,
-  ExpressHelper,
-} = require("oauth-wrapper-lib");
+const {GoogleProvider} = require("oauth-wrapper-lib/providers");
+const {AuthMiddleware, verifyJWT} = require("oauth-wrapper-lib/express");
+const OAuthClient = require("oauth-wrapper-lib");
 const cookieParser = require("cookie-parser")
 
 const app = express();
@@ -25,9 +23,9 @@ const client = new OAuthClient({
   errorRedirectUrl: "hello.com",
 });
 
-app.use(ExpressHelper.AuthMiddleware(client))
+app.use(AuthMiddleware(client))
 
-app.get("/me",ExpressHelper.verifyJWT,(req,res)=>{
+app.get("/me",verifyJWT,(req,res)=>{
     return res.send(req.user);
 })
 
